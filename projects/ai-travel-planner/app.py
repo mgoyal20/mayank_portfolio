@@ -1,19 +1,20 @@
 
 import os, math
 import streamlit as st
-from datetime import date
+from datetime import date, timedelta
 from typing import List, Dict
 
 from routing.matrix import distance_km
 from routing.tsp import tsp_order
 from retrieval.places import get_sample_pois
 from retrieval.places_google import get_live_pois
+from planner.schedule import schedule_day
 
 st.set_page_config(page_title="AI Travel Planner", page_icon="🗺️", layout="wide")
 HAS_GMAPS = bool(os.environ.get("GOOGLE_PLACES_API_KEY") or os.environ.get("GOOGLE_MAPS_API_KEY"))
 
 st.title("🗺️ AI Travel Planner")
-st.caption("Google Places retrieval + OR-Tools routing (falls back to samples if no API key).")
+st.caption("Time windows + lunch slots. Uses Google Places/Distance Matrix if keys are set; otherwise sample data + haversine.")
 
 with st.sidebar:
     st.header("Trip details")
@@ -58,30 +59,40 @@ if generate:
 
     # 2) Split across days
     day_lists = split_days(pois, days)
-
-    # Start near the first POI
-    home = {"name":"Hotel", "lat": pois[0]["lat"], "lng": pois[0]["lng"]}
     total_dist = 0.0
-    tabs = st.tabs([f"Day {i+1}" for i in range(len(day_lists))])
 
-    for idx, day_stops in enumerate(day_lists):
-        with tabs[idx]:
+    tabs = st.tabs([f"Day {i+1}" for i in range(len(day_lists))])
+    for d_idx, day_stops in enumerate(day_lists):
+        with tabs[d_idx]:
             if len(day_stops) <= 1:
                 ordered = day_stops
                 dist_km = 0.0
             else:
+                home = {"name":"Hotel", "lat": day_stops[0]["lat"], "lng": day_stops[0]["lng"]}
                 ordered, dist_km = tsp_order(day_stops, distance_km, home)
-            total_dist += dist_km
-            st.markdown(f"**Approx distance (walking): {dist_km:.1f} km**")
-            for s in ordered:
-                meta = f" · ⭐ {s.get('rating','-')}"
-                if s.get('address'): meta += f" · {s['address']}"
-                st.markdown(f"- **{s['name']}** · {s['category']}{meta}")
-            st.divider()
 
-    ok = total_dist <= max_walk_km * len(day_lists)
-    st.success(f"Trip distance: {total_dist:.1f} km · Constraint: ≤ {max_walk_km} km/day × {len(day_lists)} days → {'PASS' if ok else 'ADJUST NEEDED'}")
+            the_date = (start + timedelta(days=d_idx)).isoformat()
+            schedule = schedule_day(
+                date_str=the_date,
+                ordered_stops=ordered,
+                distance_fn=distance_km,
+                day_start="09:30",
+                day_end="19:00",
+                pace=pace,
+                insert_lunch=True,
+                lunch_time="13:00"
+            )
+            total_dist += schedule["total_walk_km"]
 
-    st.caption("Distance uses Google Distance Matrix when key is set; otherwise haversine estimate.")
+            st.markdown(f"**Walking distance (approx): {schedule['total_walk_km']:.1f} km**")
+            for leg in schedule["legs"]:
+                st.caption(f"Walk {leg['distance_km']} km · {leg['from']} → {leg['to']} [{leg['depart']} → {leg['arrive']}]")
+            for s in schedule["stops"]:
+                st.markdown(f"- **{s['name']}** · {s['category']} [{s['start']}–{s['end']}]")
+
+            ok = schedule["total_walk_km"] <= max_walk_km
+            st.success(f"Day {d_idx+1}: {'PASS' if ok else 'ADJUST NEEDED'} (limit {max_walk_km} km)")    
+
+    st.info(f"Trip total distance: {total_dist:.1f} km (limit {max_walk_km} km/day × {len(day_lists)} days)")
 else:
-    st.info("Fill the form and click **Generate Itinerary**. Toggle 'Use Google Places' if you've added an API key as a Space secret.")
+    st.info("Fill the form and click **Generate Itinerary**. The planner respects opening windows by category and adds lunch at ~13:00.")
