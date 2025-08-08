@@ -1,4 +1,3 @@
-cat > projects/ai-travel-planner/retrieval/places.py << 'PY'
 from typing import List, Dict
 
 SAMPLES = {

@@ -1,4 +1,3 @@
-cat > projects/ai-travel-planner/routing/matrix.py << 'PY'
 import os, math, json, hashlib, requests, time
 from pathlib import Path
 

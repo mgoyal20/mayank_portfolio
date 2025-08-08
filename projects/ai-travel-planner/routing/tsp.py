@@ -1,4 +1,3 @@
-cat > projects/ai-travel-planner/routing/tsp.py << 'PY'
 from typing import List, Dict, Callable, Tuple
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
