@@ -4,7 +4,7 @@ emoji: 🚀
 colorFrom: blue
 colorTo: purple
 sdk: streamlit
-app_file: projects/ai-travel-planner/app.py
+sdk_file: app.py
 pinned: false
 license: mit
 ---
