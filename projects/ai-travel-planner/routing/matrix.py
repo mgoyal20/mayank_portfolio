@@ -16,10 +16,8 @@ def haversine_km(a, b) -> float:
     else:
         lat2, lon2 = b
     R = 6371.0
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlambda = math.radians(lon2 - lon1)
+    phi1 = math.radians(lat1); phi2 = math.radians(lat2)
+    dphi = math.radians(lat2 - lat1); dlambda = math.radians(lon2 - lon1)
     h = (math.sin(dphi/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/2)**2)
     return 2 * R * math.asin(math.sqrt(h))
 
@@ -46,15 +44,12 @@ def _save_cache(cache):
         pass
 
 def distance_km(a, b, mode="walking") -> float:
-    # Use Google Distance Matrix if key present, else haversine fallback
     if not GMAPS_KEY:
         return haversine_km(a, b)
-
     cache = _load_cache()
     ck = _cache_key(a, b, mode)
     if ck in cache:
         return cache[ck]
-
     url = "https://maps.googleapis.com/maps/api/distancematrix/json"
     params = {
         "origins": f"{a['lat']},{a['lng']}",
@@ -71,7 +66,6 @@ def distance_km(a, b, mode="walking") -> float:
         km = meters / 1000.0
     except Exception:
         km = haversine_km(a, b)
-
     cache[ck] = km
     _save_cache(cache)
     time.sleep(0.05)

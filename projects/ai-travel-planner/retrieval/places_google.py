@@ -16,21 +16,32 @@ INTEREST_TO_QUERY = {
     "nightlife": {"type": "bar"}
 }
 
-def _cache_path(kind: str, city: str, interests: list, limit: int) -> Path:
-    key = json.dumps({"kind":kind,"city":city,"interests":interests,"limit":limit}, sort_keys=True)
-    h = hashlib.sha256(key.encode()).hexdigest()[:16]
-    return CACHE_DIR / f"places_{h}.json"
+def _hash_key(obj) -> str:
+    return hashlib.sha256(json.dumps(obj, sort_keys=True).encode()).hexdigest()[:16]
+
+def _cache_read(name: str):
+    p = CACHE_DIR / name
+    if p.exists():
+        try:
+            return json.loads(p.read_text())
+        except Exception:
+            return None
+    return None
+
+def _cache_write(name: str, data):
+    try:
+        (CACHE_DIR / name).write_text(json.dumps(data))
+    except Exception:
+        pass
 
 def get_live_pois(city: str, interests: list, limit: int = 25) -> List[Dict]:
     if not API_KEY:
         return []
-
-    cache_file = _cache_path("textsearch", city, interests, limit)
-    if cache_file.exists():
-        try:
-            return json.loads(cache_file.read_text())
-        except Exception:
-            pass
+    key = _hash_key({"textsearch": True, "city": city, "interests": interests, "limit": limit})
+    cache_name = f"places_{key}.json"
+    cached = _cache_read(cache_name)
+    if cached is not None:
+        return cached
 
     results: List[Dict] = []
     interests = interests or list(INTEREST_TO_QUERY.keys())
@@ -58,16 +69,75 @@ def get_live_pois(city: str, interests: list, limit: int = 25) -> List[Dict]:
                 results.append(poi)
         time.sleep(0.2)
 
-    # dedupe
+    # de-dupe by place_id or name
     dedup = {}
-    for r in results:
-        k = r.get("place_id") or r["name"]
+    for r_ in results:
+        k = r_.get("place_id") or r_["name"]
         if k not in dedup:
-            dedup[k] = r
+            dedup[k] = r_
     results = list(dedup.values())[:limit]
-
-    try:
-        cache_file.write_text(json.dumps(results))
-    except Exception:
-        pass
+    _cache_write(cache_name, results)
     return results
+
+def get_place_details_bulk(place_ids: List[str]) -> Dict[str, Dict]:
+    """
+    Fetch Place Details (opening hours) for many IDs with simple caching.
+    Returns mapping: place_id -> {"opening_hours": {...}} when available.
+    """
+    out: Dict[str, Dict] = {}
+    if not API_KEY or not place_ids:
+        return out
+
+    for pid in place_ids:
+        cache_name = f"details_{pid}.json"
+        cached = _cache_read(cache_name)
+        if cached is not None:
+            out[pid] = cached
+            continue
+
+        url = "https://maps.googleapis.com/maps/api/place/details/json"
+        # fields kept minimal to reduce cost/size
+        params = {
+            "place_id": pid,
+            "fields": "opening_hours",  # can add 'name,formatted_address' if needed
+            "key": API_KEY
+        }
+        r = requests.get(url, params=params, timeout=15)
+        if r.status_code == 200:
+            data = r.json().get("result", {})
+            to_store = {"opening_hours": data.get("opening_hours")}
+            _cache_write(cache_name, to_store)
+            out[pid] = to_store
+        time.sleep(0.12)
+    return out
+
+def get_nearby_food(lat: float, lng: float, limit: int = 5) -> List[Dict]:
+    if not API_KEY:
+        return []
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {
+        "location": f"{lat},{lng}",
+        "radius": 1200,
+        "type": "restaurant",
+        "key": API_KEY,
+        "opennow": False
+    }
+    r = requests.get(url, params=params, timeout=15)
+    if r.status_code != 200:
+        return []
+    data = r.json()
+    out = []
+    for it in data.get("results", []):
+        out.append({
+            "name": it.get("name"),
+            "lat": it.get("geometry",{}).get("location",{}).get("lat"),
+            "lng": it.get("geometry",{}).get("location",{}).get("lng"),
+            "category": "food",
+            "rating": it.get("rating", 0),
+            "price_level": it.get("price_level"),
+            "place_id": it.get("place_id"),
+            "address": it.get("vicinity")
+        })
+    out = [x for x in out if x.get("lat") and x.get("lng")]
+    out.sort(key=lambda x: x.get("rating", 0), reverse=True)
+    return out[:limit]

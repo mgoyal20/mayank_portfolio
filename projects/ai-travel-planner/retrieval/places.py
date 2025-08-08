@@ -39,7 +39,7 @@ SAMPLES = {
 
 def get_sample_pois(city: str, interests: list) -> List[Dict]:
     items = SAMPLES.get(city, [])
-    if not interests:
+    if not interests: 
         return items[:6]
     wanted = set(interests)
     filtered = [p for p in items if p["category"] in wanted]
