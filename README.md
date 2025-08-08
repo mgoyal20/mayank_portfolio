@@ -1,3 +1,17 @@
+---
+title: Mayank Portfolio
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: streamlit
+sdk_file: projects/template-streamlit-app/app.py
+pinned: false
+license: mit
+---
+
+# Mayank Goyal – AI PM Portfolio
+This is my interactive portfolio hosted on Hugging Face Spaces.
+
 
 # AI PM Portfolio Scaffold
 
