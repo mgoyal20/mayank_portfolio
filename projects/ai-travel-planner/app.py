@@ -19,7 +19,7 @@ st.set_page_config(page_title="AI Travel Planner", page_icon="🗺️", layout="
 HAS_GMAPS = bool(os.environ.get("GOOGLE_PLACES_API_KEY") or os.environ.get("GOOGLE_MAPS_API_KEY"))
 
 # --- URL state (shareable links) ---
-qp = st.query_params()
+qp = st.query_params
 def _get(name, default):
     v = qp.get(name)
     if not v: return default
