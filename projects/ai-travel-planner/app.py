@@ -46,7 +46,7 @@ with st.sidebar:
     use_live = st.checkbox("Use Google Places (if key available)", value=HAS_GMAPS, disabled=not HAS_GMAPS)
 
     # Keep URL in sync
-    st.experimental_set_query_params(
+    st.query_params(
         city=city, days=str(days), pace=pace,
         interests=",".join(quote(i) for i in interests)
     )
