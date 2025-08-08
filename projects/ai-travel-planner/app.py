@@ -68,12 +68,12 @@ with st.sidebar:
     use_live = st.checkbox("Use Google Places (if key available)", value=HAS_GMAPS, disabled=not HAS_GMAPS)
 
     # Keep URL in sync for shareable links
-    st.experimental_set_query_params(
-        city=city,
-        days=str(days),
-        pace=pace,
-        interests=",".join(interests)
-    )
+    st.query_params = {
+    	"city": city,
+    	"days": str(days),
+    	"pace": pace,
+    	"interests": ",".join(interests),
+	}
 
 # ---------- Global constraint ----------
 pace_to_max_km = {"chill": 8, "normal": 12, "packed": 16}
