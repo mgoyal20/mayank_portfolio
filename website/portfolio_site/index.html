@@ -1,0 +1,133 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mayank Goyal · AI PM Portfolio</title>
+  <meta name="description" content="AI Product Manager portfolio: GenAI & agentic AI demos, case studies, and architecture notes.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand">
+        <h1>Mayank Goyal</h1>
+        <p>Product Manager · GenAI & Agentic AI Systems</p>
+      </div>
+      <nav class="nav">
+        <a href="#projects">Projects</a>
+        <a href="#case-studies">Case Studies</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h2>Building AI products that ship and scale.</h2>
+        <p>I design, launch, and iterate GenAI and agentic AI features with measurable impact — RAG, multi‑agent orchestration, evaluation, and ops.</p>
+        <div class="cta">
+          <a class="btn" href="#projects">See live demos</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/mayankgoyal20" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="wrap">
+        <h3>Live Demos</h3>
+        <div class="grid">
+          <article class="card">
+            <h4>AI Travel Planner (MVP)</h4>
+            <p>LLM planner + RAG + route optimization. Generates grounded, time‑feasible day plans.</p>
+            <div class="actions">
+              <a class="btn" id="travelDemo" target="_blank" rel="noopener" href="#">Live demo</a>
+              <a class="btn ghost" id="travelRepo" target="_blank" rel="noopener" href="#">Repo</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h4>Multi‑Agent Workflow Orchestrator</h4>
+            <p>LangChain/LangGraph agents for approvals, summaries, and routing. Guardrails + observability.</p>
+            <div class="actions">
+              <a class="btn" id="agentDemo" target="_blank" rel="noopener" href="#">Live demo</a>
+              <a class="btn ghost" id="agentRepo" target="_blank" rel="noopener" href="#">Repo</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h4>RAG Personalization Engine</h4>
+            <p>Vector search over behavior signals; prompt templates and eval suite to reduce irrelevant recs.</p>
+            <div class="actions">
+              <a class="btn" id="ragDemo" target="_blank" rel="noopener" href="#">Live demo</a>
+              <a class="btn ghost" id="ragRepo" target="_blank" rel="noopener" href="#">Repo</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="case-studies" class="section alt">
+      <div class="wrap">
+        <h3>Case Studies</h3>
+        <div class="grid">
+          <article class="card case">
+            <h4>Cutting P95 Latency from 3.2s → 1.8s</h4>
+            <ul>
+              <li>Cached hot paths, parallelized tool calls, re‑ranked retrieval</li>
+              <li>Maintained grounding accuracy and CTR</li>
+            </ul>
+            <a class="btn small" href="#" target="_blank">Read post</a>
+          </article>
+          <article class="card case">
+            <h4>RAG Eval & Safety</h4>
+            <ul>
+              <li>2k‑prompt offline eval set, hallucination −18%</li>
+              <li>Prompt registry, canary rollout, trace metrics</li>
+            </ul>
+            <a class="btn small" href="#" target="_blank">Read post</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="wrap">
+        <h3>About</h3>
+        <p>I’m a product manager focused on applied AI — shipping features that balance accuracy, latency, and cost. I’ve led launches for RAG systems, multi‑agent workflows, and analytics in SaaS and gaming. I work tightly with engineering on architecture decisions and rollout strategy.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="section alt">
+      <div class="wrap">
+        <h3>Contact</h3>
+        <p>Email: <a href="mailto:mayankgoyal0720@gmail.com">mayankgoyal0720@gmail.com</a></p>
+        <p>LinkedIn: <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/mayankgoyal20">linkedin.com/in/mayankgoyal20</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <small>© <span id="year"></span> Mayank Goyal</small>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    // Replace these with your real URLs
+    document.getElementById('travelDemo').href = "https://huggingface.co/spaces/Mgoyal20/mayank_portfolio";
+    document.getElementById('travelRepo').href = "https://github.com/mgoyal20/mayank_portfolio";
+    document.getElementById('agentDemo').href = "#";
+    document.getElementById('agentRepo').href = "#";
+    document.getElementById('ragDemo').href = "#";
+    document.getElementById('ragRepo').href = "#";
+  </script>
+</body>
+</html>
