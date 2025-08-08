@@ -4,16 +4,16 @@ from datetime import date, timedelta
 from typing import List, Dict, Optional
 from urllib.parse import quote, unquote
 
-from projects.ai_travel_planner.routing.matrix import distance_km
-from projects.ai_travel_planner.routing.tsp import tsp_order
-from projects.ai_travel_planner.retrieval.places import get_sample_pois
-from projects.ai_travel_planner.retrieval.places_google import (
+from routing.matrix import distance_km
+from routing.tsp import tsp_order
+from retrieval.places import get_sample_pois
+from retrieval.places_google import (
     get_live_pois,
     get_place_details_bulk,
     get_nearby_food,
 )
-from projects.ai_travel_planner.planner.schedule import schedule_day
-from projects.ai_travel_planner.utils.pdf_export import itinerary_to_pdf
+from planner.schedule import schedule_day
+from utils.pdf_export import itinerary_to_pdf
 
 st.set_page_config(page_title="AI Travel Planner", page_icon="🗺️", layout="wide")
 HAS_GMAPS = bool(os.environ.get("GOOGLE_PLACES_API_KEY") or os.environ.get("GOOGLE_MAPS_API_KEY"))
