@@ -1,0 +1,50 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mayank Goyal · AI PM Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Mayank Goyal</h1>
+    <p>Product Manager · GenAI & Agentic AI Systems</p>
+    <nav>
+      <a href="https://www.linkedin.com/in/mayankgoyal20" target="_blank">LinkedIn</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="#" id="resumeLink">Resume</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Live Demos</h2>
+      <p>I design, ship, and scale AI products. Explore interactive demos below.</p>
+    </section>
+
+    <section class="projects">
+      <article>
+        <h3>AI PM Demo Template</h3>
+        <p>Minimal Streamlit app scaffold hosted on Hugging Face Spaces.</p>
+        <p><a href="#" target="_blank" id="spaceLink">Open live demo</a></p>
+      </article>
+
+      <article>
+        <h3>AI Travel Planner (WIP)</h3>
+        <p>LLM planner + RAG + route optimization. Coming soon.</p>
+        <p><a href="#" target="_blank">GitHub repo</a></p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <small>© <span id="year"></span> Mayank Goyal</small>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
