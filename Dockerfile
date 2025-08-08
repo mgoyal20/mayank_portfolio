@@ -1,25 +1,22 @@
-# Dockerfile
+# Dockerfile (known-good for HF docker sdk)
 FROM python:3.11-slim
 
-# (Optional) system deps if you need them later
-# RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+WORKDIR /home/user/app
 
-WORKDIR /app
+# Deps
+COPY requirements.txt /home/user/app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python deps
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# App
+COPY . /home/user/app
 
-# Copy the repo
-COPY . /app
-
-# Streamlit config
+# Make imports predictable
+ENV PYTHONPATH=/home/user/app
 ENV STREAMLIT_SERVER_HEADLESS=true
 ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 ENV PORT=8501
 
 EXPOSE 8501
 
-# IMPORTANT: point this to your actual app file
+# Run the app
 CMD ["streamlit", "run", "projects/ai-travel-planner/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
-
