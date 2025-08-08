@@ -35,4 +35,3 @@ def tsp_order(stops: List[Dict], distance_fn: Callable, start: Dict) -> Tuple[Li
             order.append(nodes[nidx])
         index = next_index
     return order, total_m / 1000.0
-PY

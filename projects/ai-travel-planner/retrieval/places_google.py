@@ -71,4 +71,3 @@ def get_live_pois(city: str, interests: list, limit: int = 25) -> List[Dict]:
     except Exception:
         pass
     return results
-PY

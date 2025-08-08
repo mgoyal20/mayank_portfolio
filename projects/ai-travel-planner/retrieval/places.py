@@ -47,4 +47,3 @@ def get_sample_pois(city: str, interests: list) -> List[Dict]:
         extras = [p for p in items if p not in filtered]
         filtered.extend(extras[: (6 - len(filtered)) ])
     return filtered[:8]
-PY

@@ -76,4 +76,3 @@ def distance_km(a, b, mode="walking") -> float:
     _save_cache(cache)
     time.sleep(0.05)
     return km
-PY
