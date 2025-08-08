@@ -21,4 +21,5 @@ ENV PORT=8501
 EXPOSE 8501
 
 # IMPORTANT: point this to your actual app file
-CMD ["streamlit", "run", "projects/template-streamlit-app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+CMD ["streamlit", "run", "projects/ai-travel-planner/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+
