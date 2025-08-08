@@ -4,11 +4,11 @@ import streamlit as st
 from datetime import date, timedelta
 from typing import List, Dict
 
-from .routing.matrix import distance_km
-from .routing.tsp import tsp_order
-from .retrieval.places import get_sample_pois
-from .retrieval.places_google import get_live_pois
-from .planner.schedule import schedule_day
+from routing.matrix import distance_km
+from routing.tsp import tsp_order
+from retrieval.places import get_sample_pois
+from retrieval.places_google import get_live_pois
+from planner.schedule import schedule_day
 
 st.set_page_config(page_title="AI Travel Planner", page_icon="🗺️", layout="wide")
 HAS_GMAPS = bool(os.environ.get("GOOGLE_PLACES_API_KEY") or os.environ.get("GOOGLE_MAPS_API_KEY"))
