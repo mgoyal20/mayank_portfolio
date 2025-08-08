@@ -1,4 +1,3 @@
-cat > projects/ai-travel-planner/retrieval/places_google.py << 'PY'
 import os, time, requests, json, hashlib
 from typing import List, Dict
 from pathlib import Path
